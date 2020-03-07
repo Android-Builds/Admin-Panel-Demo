@@ -1,4 +1,4 @@
-import 'package:AdminPanelDemo/event/events.dart';
+import 'package:AdminPanelDemo/event/default_events.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   RaisedButton(
-                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Events())),
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DefaultEvents())),
                     child: Text('Add'),
                   ),
                   SizedBox(width: 100.0),

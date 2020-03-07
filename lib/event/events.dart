@@ -1,4 +1,4 @@
-import 'package:AdminPanelDemo/event/sub_events.dart';
+import 'package:AdminPanelDemo/event/categories.dart';
 import 'package:flutter/material.dart';
 
 class Events extends StatefulWidget {
@@ -7,24 +7,143 @@ class Events extends StatefulWidget {
 }
 
 class _EventsState extends State<Events> {
+
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
   String dropdownValue = 'One';
 
   dropDown(String value) {
     if(value == 'Add Event') {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => SubEvents()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Categories()));
     }
+  }
+
+  Future<Null> _selectDate(BuildContext context, int n)async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: n == 1 ? startDate : endDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != DateTime.now())
+      setState(() {
+        if(n == 1) {
+          startDate = picked;
+        } else {
+          endDate = picked;
+        }
+      });
+      //TODO: endDate should not be less than startDate
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height / 2.2,
-              child: Center(
+        appBar: AppBar(
+          elevation: 0.0,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:40.0),
+                child: TextField(
+                  maxLines: 1,
+                  obscureText: false,
+                  style: TextStyle(fontSize: 20.0),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                    hintText: "Event ID",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0)
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:40.0),
+                child: TextField(
+                  maxLines: 1,
+                  obscureText: false,
+                  style: TextStyle(fontSize: 20.0),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                    hintText: "Event Name",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0)
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:35.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () => _selectDate(context, 1),
+                      child: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("${startDate.toLocal()}".split(' ')[0]),
+                              Icon(Icons.arrow_drop_down)
+                            ],
+                          ),
+                        ),
+                        height: 50,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(5.0)
+                        ),
+                      ),
+                    ),
+                    Text('To'),
+                    GestureDetector(
+                      onTap: () => _selectDate(context, 2),
+                      child: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("${endDate.toLocal()}".split(' ')[0]),
+                              Icon(Icons.arrow_drop_down)
+                            ],
+                          ),
+                        ),                      
+                        height: 50,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(5.0)
+                        ),
+                      ),
+                    ),
+                  ]
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:40.0),
+                child: TextField(
+                  maxLines: 1,
+                  obscureText: false,
+                  style: TextStyle(fontSize: 20.0),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                    hintText: "Theme",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0)
+                    ),
+                  ),
+                ),
+              ),
+              Center(
                 child: DropdownButton<String>(
                   value: dropdownValue,
                   icon: Icon(Icons.arrow_drop_down),
@@ -53,37 +172,18 @@ class _EventsState extends State<Events> {
                     .toList(),
                 ),
               ),
-            ),
-            Divider(thickness: 2.0),
-            Expanded(
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal:50.0, vertical: 10.0),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "Name of Event",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0)
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height:40.0),
-                      RaisedButton(
-                        onPressed: () {},
-                        child: Text('New'),
-                      )
-                    ],
+              Padding(
+                padding: const EdgeInsets.only(right:45.0, bottom: 40.0),
+                child: Align(
+                  alignment: FractionalOffset.bottomRight,
+                  child: RaisedButton(
+                    onPressed: () {},
+                    child: Text('Add'),
                   ),
                 ),
-              ),
-            ),
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
