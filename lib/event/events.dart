@@ -56,27 +56,31 @@ class _EventsState extends State<Events> {
             ),
             Divider(thickness: 2.0),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:50.0, vertical: 10.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        hintText: "Name of Event",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0)
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal:50.0, vertical: 10.0),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                            hintText: "Name of Event",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0)
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(height:40.0),
+                      RaisedButton(
+                        onPressed: () {},
+                        child: Text('New'),
+                      )
+                    ],
                   ),
-                  SizedBox(height:40.0),
-                  RaisedButton(
-                    onPressed: () {},
-                    child: Text('New'),
-                  )
-                ],
+                ),
               ),
             ),
           ],

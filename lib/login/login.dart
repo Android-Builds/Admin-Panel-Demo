@@ -9,6 +9,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  //TODO: Add a logic to retain username and password when setState is evoked [remember me]
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   login() {

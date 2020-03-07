@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
             title: Text('Admin Panel'),
           ),
         ),
-        body: Center(
+        body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Align(
