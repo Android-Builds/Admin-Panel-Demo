@@ -10,7 +10,12 @@ class _SubEventsState extends State<SubEvents> {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
   String dropdownValue = 'One';
-  SubEvent subEvent = new SubEvent(id: null, name: null, date: null, time: null, location: null, universities: null);
+  String id, name, date, time, location, universities, description;
+  TextEditingController textEditingController = new TextEditingController();
+  TextEditingController textEditingController2 = new TextEditingController();
+  TextEditingController textEditingController3 = new TextEditingController();
+  TextEditingController textEditingController4 = new TextEditingController();
+  TextEditingController textEditingController5 = new TextEditingController();
 
   Future<Null> _selectDate(BuildContext context, int n)async {
     final DateTime picked = await showDatePicker(
@@ -22,11 +27,19 @@ class _SubEventsState extends State<SubEvents> {
       setState(() {
         if(n == 1) {
           startDate = picked;
+          date = startDate.toLocal().toString().split(' ')[0];
         } else {
           endDate = picked;
+          time = endDate.toString();
         }
       });
       //TODO: endDate should not be less than startDate
+  }
+
+  void initState() {
+    super.initState();
+    date = startDate.toLocal().toString().split(' ')[0];
+    time = startDate.toLocal().toString().split(' ')[1].substring(0,5);
   }
 
   @override
@@ -48,6 +61,10 @@ class _SubEventsState extends State<SubEvents> {
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
                   child: TextField(
                     maxLines: 1,
+                    controller: textEditingController,
+                    onChanged: (value) {
+                      id = textEditingController.text;
+                    },
                     obscureText: false,
                     style: TextStyle(fontSize: 20.0),
                     decoration: InputDecoration(
@@ -63,6 +80,10 @@ class _SubEventsState extends State<SubEvents> {
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
                   child: TextField(
                     maxLines: 1,
+                    controller: textEditingController2,
+                    onChanged: (value) {
+                      name = textEditingController2.text;
+                    },
                     obscureText: false,
                     style: TextStyle(fontSize: 20.0),
                     decoration: InputDecoration(
@@ -87,7 +108,7 @@ class _SubEventsState extends State<SubEvents> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text("${startDate.toLocal()}".split(' ')[0]),
+                                Text("$date"),
                                 Icon(Icons.arrow_drop_down)
                               ],
                             ),
@@ -109,7 +130,7 @@ class _SubEventsState extends State<SubEvents> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text("${endDate.toLocal()}".split(' ')[0]),
+                                Text("$time"),
                                 Icon(Icons.arrow_drop_down)
                               ],
                             ),
@@ -129,11 +150,15 @@ class _SubEventsState extends State<SubEvents> {
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
                   child: TextField(
                     maxLines: 1,
+                    controller: textEditingController3,
+                    onChanged: (value) {
+                      location = textEditingController3.text;
+                    },
                     obscureText: false,
                     style: TextStyle(fontSize: 20.0),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                      hintText: "Theme",
+                      hintText: "Location",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0)
                       ),
@@ -144,11 +169,15 @@ class _SubEventsState extends State<SubEvents> {
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
                   child: TextField(
                     maxLines: 1,
+                    controller: textEditingController4,
+                    onChanged: (value) {
+                      universities = textEditingController4.text;
+                    },
                     obscureText: false,
                     style: TextStyle(fontSize: 20.0),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                      hintText: "Theme",
+                      hintText: "Universities",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0)
                       ),
@@ -161,6 +190,10 @@ class _SubEventsState extends State<SubEvents> {
                     // margin: EdgeInsets.all(12.0),
                     height: 5 * 24.0,
                     child: TextField(
+                      controller: textEditingController5,
+                      onChanged: (value) {
+                        description = textEditingController5.text;
+                      },
                       maxLines: 5,
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -177,7 +210,9 @@ class _SubEventsState extends State<SubEvents> {
                     alignment: FractionalOffset.bottomRight,
                     child: RaisedButton(
                       onPressed: () {
-                        Navigator.pop(context, );
+                        SubEvent subEvent = new SubEvent(id: id, name: name, date: date, 
+                                time: time, location: location, universities: universities);
+                        Navigator.pop(context, subEvent);
                       },
                       child: Text('Add'),
                     ),

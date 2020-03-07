@@ -12,9 +12,16 @@ class _CategoriesState extends State<Categories> {
   DateTime endDate = DateTime.now();
   String dropdownValue = 'One';
 
-  dropDown(String value) {
+  dropDown(String value) async {
     if(value == 'Add Event') {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => SubEvents()));
+      final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => SubEvents()));
+      print(result.id);
+      print(result.name);
+      print(result.date);
+      print(result.time);
+      print(result.location);
+      print(result.universities);
+      print(result.description);
     }
   }
 
@@ -35,7 +42,7 @@ class _CategoriesState extends State<Categories> {
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
@@ -105,7 +112,7 @@ class _CategoriesState extends State<Categories> {
                     child: Text('Add'),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
