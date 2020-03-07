@@ -22,7 +22,7 @@ class LoginWidget extends StatelessWidget {
                   size: 110.0,
                 ),
               ),
-              SizedBox(height: 100.0),
+              SizedBox(height: 50.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
                 child: TextField(

@@ -14,7 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   login() {
     print('called');
     if(userid == 'admin' && password == 'password') {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
     } else {
       _scaffoldKey.currentState.removeCurrentSnackBar();
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Wrong Username or Password !')));
@@ -39,9 +39,35 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: Colors.transparent,
         ),
         body: SingleChildScrollView(
-                  child: Column(
+          child: Column(
             children: <Widget>[
               LoginWidget(),
+              SizedBox(height:10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Checkbox(
+                          activeColor: Colors.blueAccent,
+                          value: rememberMe,
+                          onChanged: (value) {
+                            setState(() {
+                              rememberMe = value;
+                            });
+                          }
+                        ),
+                        Text('Remember Me'),
+                      ],
+                    ),
+                    GestureDetector(
+                      child: Text('Forgot Password ?'),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(height: 60.0),
               RaisedButton(
                 onPressed: () {
@@ -50,11 +76,6 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text('Login'),
               ),
               SizedBox(height: 50.0),
-              GestureDetector(
-                child: Text('Forgot Password ?',
-                style: TextStyle(fontSize: 12.0),
-                ),
-              ),
             ],
           ),
         ),
