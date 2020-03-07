@@ -1,3 +1,3 @@
 String userid, password;
 
-bool rememberMe = false;
+bool rememberMe = true;
