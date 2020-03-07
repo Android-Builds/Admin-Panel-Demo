@@ -1,3 +1,4 @@
+import 'package:AdminPanelDemo/event/sub_events.dart';
 import 'package:flutter/material.dart';
 
 class Categories extends StatefulWidget {
@@ -13,7 +14,7 @@ class _CategoriesState extends State<Categories> {
 
   dropDown(String value) {
     if(value == 'Add Event') {
-      // Navigator.push(context, MaterialPageRoute(builder: (context) => Events()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => SubEvents()));
     }
   }
 
