@@ -1,3 +1,4 @@
+import 'package:AdminPanelDemo/event/event_details.dart';
 import 'package:AdminPanelDemo/models/SubEvent.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +37,12 @@ class _SubEventsState extends State<SubEvents> {
       //TODO: endDate should not be less than startDate
   }
 
+  dropDown(String value) {
+    if(value == 'Add Event') {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsPage()));
+    }
+  }
+
   void initState() {
     super.initState();
     date = startDate.toLocal().toString().split(' ')[0];
@@ -48,6 +55,7 @@ class _SubEventsState extends State<SubEvents> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          title: Text('Sub Events'),
           elevation: 0.0,
         ),
         body: Padding(
@@ -187,7 +195,6 @@ class _SubEventsState extends State<SubEvents> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
                   child: Container(
-                    // margin: EdgeInsets.all(12.0),
                     height: 5 * 24.0,
                     child: TextField(
                       controller: textEditingController5,
@@ -197,25 +204,56 @@ class _SubEventsState extends State<SubEvents> {
                       maxLines: 5,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: "Enter event deetails",
+                        hintText: "Enter event details",
                         fillColor: Colors.grey[900],
                         filled: true,
                       ),
                     ),
                   ),
-                ),                            
+                ),
                 Padding(
-                  padding: const EdgeInsets.only(right:45.0, bottom: 40.0),
-                  child: Align(
-                    alignment: FractionalOffset.bottomRight,
-                    child: RaisedButton(
-                      onPressed: () {
-                        SubEvent subEvent = new SubEvent(id: id, name: name, date: date, 
-                                time: time, location: location, universities: universities);
-                        Navigator.pop(context, subEvent);
-                      },
-                      child: Text('Add'),
-                    ),
+                  padding: const EdgeInsets.symmetric(horizontal:40.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Center(
+                        child: DropdownButton<String>(
+                          value: dropdownValue,
+                          icon: Icon(Icons.arrow_drop_down),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(
+                            color: Colors.grey
+                          ),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.grey,
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              dropdownValue = newValue;
+                            });
+                            dropDown(newValue);
+                          },
+                          items: <String>['One', 'Two', 'Free', 'Add Event']
+                            .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Center(child: Text(value)),
+                              );
+                            })
+                            .toList(),
+                        ),
+                      ),
+                      RaisedButton(
+                        onPressed: () {
+                          SubEvent subEvent = new SubEvent(id: id, name: name, date: date, 
+                                  time: time, location: location, universities: universities);
+                          Navigator.pop(context, subEvent);
+                        },
+                        child: Text('Add'),
+                      ),
+                    ],
                   ),
                 )
               ],

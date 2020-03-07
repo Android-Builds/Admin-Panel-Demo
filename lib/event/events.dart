@@ -41,6 +41,7 @@ class _EventsState extends State<Events> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          title: Text('Events'),
           elevation: 0.0,
         ),
         body: Padding(
