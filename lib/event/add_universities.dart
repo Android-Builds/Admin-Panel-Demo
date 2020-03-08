@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AddUniversititesPage extends StatefulWidget {
+  AddUniversititesPage({this.uni, this.edit = false});
+  final String uni;
+  final bool edit;
   @override
   _AddUniversititesPageState createState() => _AddUniversititesPageState();
 }
@@ -8,6 +11,14 @@ class AddUniversititesPage extends StatefulWidget {
 class _AddUniversititesPageState extends State<AddUniversititesPage> {
   String university;
   TextEditingController tuniversity = new TextEditingController();
+
+  @override
+  void initState(){
+    super.initState();
+    if(widget.edit == true) {
+      tuniversity.text = widget.uni;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

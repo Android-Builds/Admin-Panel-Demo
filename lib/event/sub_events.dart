@@ -10,6 +10,8 @@ class SubEvents extends StatefulWidget {
 }
 
 class _SubEventsState extends State<SubEvents> {
+
+  int index;
   DateTime pickedDate = DateTime.now();
   TimeOfDay pickedTime = TimeOfDay.now();
   String detailsDropDownValue = 'Add Event Details';
@@ -36,7 +38,6 @@ class _SubEventsState extends State<SubEvents> {
         date = pickedDate.toLocal().toString().split(' ')[0];
       });
     }
-    //TODO: endDate should not be less than startDate
   }
 
   Future<Null> _selectTime(BuildContext context) async {
@@ -49,7 +50,6 @@ class _SubEventsState extends State<SubEvents> {
         time = pickedTime.hour.toString() + ':' + pickedTime.minute.toString();
       });
     }
-    //TODO: endDate should not be less than startDate
   }
 
   universitiesDropDown(String value) async {
@@ -62,6 +62,19 @@ class _SubEventsState extends State<SubEvents> {
         }
         universityList.insert(0, result);
       }) : NullThrownError();
+    } else if(value != '...') {
+      for(int i=0; i<universityList.length; i++) {
+        if(value == universityList[i]) {
+          index = i;
+          break;
+        }
+      }
+      var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => 
+        AddUniversititesPage(uni: universityList[index], edit: true)));
+      universitiesDropDownValue = result;
+      setState(() {
+        universityList[index] = result;
+      });
     }
   }
 
@@ -78,6 +91,7 @@ class _SubEventsState extends State<SubEvents> {
     }
   }
 
+  @override
   void initState() {
     super.initState();
     date = pickedDate.toLocal().toString().split(' ')[0];
