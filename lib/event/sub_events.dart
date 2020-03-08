@@ -1,3 +1,4 @@
+import 'package:AdminPanelDemo/event/add_universities.dart';
 import 'package:AdminPanelDemo/event/event_details.dart';
 import 'package:AdminPanelDemo/models/EventDetail.dart';
 import 'package:AdminPanelDemo/models/SubEvent.dart';
@@ -11,16 +12,17 @@ class SubEvents extends StatefulWidget {
 class _SubEventsState extends State<SubEvents> {
   DateTime pickedDate = DateTime.now();
   TimeOfDay pickedTime = TimeOfDay.now();
-  String dropdownValue = 'Add Event Details';
-  String universitiesDropDown = 'Add Universities';
-  List<String> universityList = ['KIIT', 'Add Universities'];
+  String detailsDropDownValue = 'Add Event Details';
+  String universitiesDropDownValue = 'Add Universities';
+  List<String> universityList = ['...', 'Add Universities'];
+  List<String> detailsList = ['...','Add Event Details'];
   String id, name, date, time, location, universities, description;
   TextEditingController tid = new TextEditingController();
   TextEditingController tname = new TextEditingController();
   TextEditingController tlocation = new TextEditingController();
   TextEditingController textEditingController4 = new TextEditingController();
   TextEditingController textEditingController5 = new TextEditingController();
-  var list = <EventDetail>[];
+  var listDetails = <EventDetail>[];
 
   Future<Null> _selectDate(BuildContext context)async {
     final DateTime picked = await showDatePicker(
@@ -28,33 +30,51 @@ class _SubEventsState extends State<SubEvents> {
         initialDate: pickedDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != DateTime.now())
+    if (picked != null && picked != DateTime.now()) {
       setState(() {
         pickedDate = picked;
         date = pickedDate.toLocal().toString().split(' ')[0];
       });
-      //TODO: endDate should not be less than startDate
+    }
+    //TODO: endDate should not be less than startDate
   }
 
   Future<Null> _selectTime(BuildContext context) async {
     final TimeOfDay picked = await showTimePicker(
         context: context,
         initialTime: pickedTime,);
-    if (picked != null && picked != TimeOfDay.now())
+    if (picked != null && picked != TimeOfDay.now()) {
       setState(() {
         pickedTime = picked;
         time = pickedTime.hour.toString() + ':' + pickedTime.minute.toString();
       });
-      //TODO: endDate should not be less than startDate
+    }
+    //TODO: endDate should not be less than startDate
+  }
+
+  universitiesDropDown(String value) async {
+    if(value == 'Add Universities') {
+      var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddUniversititesPage()));
+      // listDetails.insert(0, result);
+      result != null ? setState((){
+        if (universityList[0] == '...'){
+          universityList.removeAt(0);
+        }
+        universityList.insert(0, result);
+      }) : NullThrownError();
+    }
   }
 
   dropDown(String value) async {
     if(value == 'Add Event Details') {
       var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsPage()));
-      list.add(result);
-      // for(int i=0; i<list.length; i++) {
-      //   print(list[i].header); // to check if the values returned are being added to the list.
-      // }
+      result != null ? setState((){
+        if (detailsList[0] == '...'){
+          detailsList.removeAt(0);
+        }
+        detailsList.insert(0, result.header);
+        listDetails.insert(0, result);
+      }) : NullThrownError();
     }
   }
 
@@ -205,7 +225,7 @@ class _SubEventsState extends State<SubEvents> {
                     children: <Widget>[
                       Center(
                         child: DropdownButton<String>(
-                          value: universitiesDropDown,
+                          value: universitiesDropDownValue,
                           icon: Icon(Icons.arrow_drop_down),
                           iconSize: 24,
                           elevation: 16,
@@ -217,9 +237,9 @@ class _SubEventsState extends State<SubEvents> {
                           ),
                           onChanged: (String newValue) {
                             setState(() {
-                              universitiesDropDown = newValue;
+                              universitiesDropDownValue = newValue;
                             });
-                            // dropDown(newValue);
+                            universitiesDropDown(newValue);
                           },
                           items: universityList.map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
@@ -232,7 +252,7 @@ class _SubEventsState extends State<SubEvents> {
                       ),
                       Center(
                         child: DropdownButton<String>(
-                          value: dropdownValue,
+                          value: detailsDropDownValue,
                           icon: Icon(Icons.arrow_drop_down),
                           iconSize: 24,
                           elevation: 16,
@@ -244,11 +264,11 @@ class _SubEventsState extends State<SubEvents> {
                           ),
                           onChanged: (String newValue) {
                             setState(() {
-                              dropdownValue = newValue;
+                              detailsDropDownValue = newValue;
                             });
                             dropDown(newValue);
                           },
-                          items: <String>['One', 'Two', 'Free', 'Add Event Details']
+                          items: detailsList
                             .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -285,7 +305,7 @@ class _SubEventsState extends State<SubEvents> {
                   child: RaisedButton(
                     onPressed: () {
                       SubEvent subEvent = new SubEvent(id: id, name: name, date: date, 
-                              time: time, location: location, universities: universities, details: list);
+                              time: time, location: location, universities: universityList, details: listDetails);
                       Navigator.pop(context, subEvent);
                     },
                     child: Text('Add'),

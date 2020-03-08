@@ -8,7 +8,7 @@ class SubEvent {
   final String time;
   final String description;
   final String location;
-  final String universities;
+  final List<String> universities;
   final List<EventDetail> details;
 
   SubEvent({
