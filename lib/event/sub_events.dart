@@ -9,9 +9,9 @@ class SubEvents extends StatefulWidget {
 }
 
 class _SubEventsState extends State<SubEvents> {
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
-  String dropdownValue = 'One';
+  DateTime pickedDate = DateTime.now();
+  TimeOfDay pickedTime = TimeOfDay.now();
+  String dropdownValue = 'Add Event Details';
   String universitiesDropDown = 'Add Universities';
   List<String> universityList = ['KIIT', 'Add Universities'];
   String id, name, date, time, location, universities, description;
@@ -22,39 +22,46 @@ class _SubEventsState extends State<SubEvents> {
   TextEditingController textEditingController5 = new TextEditingController();
   var list = <EventDetail>[];
 
-  Future<Null> _selectDate(BuildContext context, int n)async {
+  Future<Null> _selectDate(BuildContext context)async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: n == 1 ? startDate : endDate,
+        initialDate: pickedDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != DateTime.now())
       setState(() {
-        if(n == 1) {
-          startDate = picked;
-          date = startDate.toLocal().toString().split(' ')[0];
-        } else {
-          endDate = picked;
-          time = endDate.toString();
-        }
+        pickedDate = picked;
+        date = pickedDate.toLocal().toString().split(' ')[0];
+      });
+      //TODO: endDate should not be less than startDate
+  }
+
+  Future<Null> _selectTime(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+        context: context,
+        initialTime: pickedTime,);
+    if (picked != null && picked != TimeOfDay.now())
+      setState(() {
+        pickedTime = picked;
+        time = pickedTime.hour.toString() + ':' + pickedTime.minute.toString();
       });
       //TODO: endDate should not be less than startDate
   }
 
   dropDown(String value) async {
-    if(value == 'Add Event') {
+    if(value == 'Add Event Details') {
       var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsPage()));
       list.add(result);
-      for(int i=0; i<list.length; i++) {
-        print(list[i].header); // to check if the values returned are being added to the list.
-      }
+      // for(int i=0; i<list.length; i++) {
+      //   print(list[i].header); // to check if the values returned are being added to the list.
+      // }
     }
   }
 
   void initState() {
     super.initState();
-    date = startDate.toLocal().toString().split(' ')[0];
-    time = startDate.toLocal().toString().split(' ')[1].substring(0,5);
+    date = pickedDate.toLocal().toString().split(' ')[0];
+    time = pickedTime.hour.toString() + ':' + pickedTime.minute.toString();
   }
 
   @override
@@ -127,7 +134,7 @@ class _SubEventsState extends State<SubEvents> {
                       Column(
                         children: <Widget>[
                           GestureDetector(
-                            onTap: () => _selectDate(context, 1),
+                            onTap: () => _selectDate(context),
                             child: Container(
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -150,7 +157,7 @@ class _SubEventsState extends State<SubEvents> {
                         ],
                       ),
                       GestureDetector(
-                        onTap: () => _selectDate(context, 2),
+                        onTap: () => _selectTime(context),
                         child: Container(
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -163,7 +170,7 @@ class _SubEventsState extends State<SubEvents> {
                             ),
                           ),                      
                           height: 50,
-                          width: 120,
+                          width: 100,
                           decoration: BoxDecoration(
                             color: Colors.grey[900],
                             borderRadius: BorderRadius.circular(5.0)
@@ -193,32 +200,65 @@ class _SubEventsState extends State<SubEvents> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
-                  child: Center(
-                    child: DropdownButton<String>(
-                      value: universitiesDropDown,
-                      icon: Icon(Icons.arrow_drop_down),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: TextStyle(
-                        color: Colors.grey
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Center(
+                        child: DropdownButton<String>(
+                          value: universitiesDropDown,
+                          icon: Icon(Icons.arrow_drop_down),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(
+                            color: Colors.grey
+                          ),
+                          underline: Container(
+                            color: Colors.transparent,
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              universitiesDropDown = newValue;
+                            });
+                            // dropDown(newValue);
+                          },
+                          items: universityList.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Center(child: Text(value)),
+                              );
+                            })
+                            .toList(),
+                        ),
                       ),
-                      underline: Container(
-                        color: Colors.transparent,
-                      ),
-                      onChanged: (String newValue) {
-                        setState(() {
-                          universitiesDropDown = newValue;
-                        });
-                        // dropDown(newValue);
-                      },
-                      items: universityList.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Center(child: Text(value)),
-                          );
-                        })
-                        .toList(),
-                    ),
+                      Center(
+                        child: DropdownButton<String>(
+                          value: dropdownValue,
+                          icon: Icon(Icons.arrow_drop_down),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(
+                            color: Colors.grey
+                          ),
+                          underline: Container(
+                            color: Colors.transparent,
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              dropdownValue = newValue;
+                            });
+                            dropDown(newValue);
+                          },
+                          items: <String>['One', 'Two', 'Free', 'Add Event Details']
+                            .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Center(child: Text(value)),
+                              );
+                            })
+                            .toList(),
+                        ),
+                      ),                      
+                    ],
                   ),
                 ),
                 Padding(
@@ -242,47 +282,13 @@ class _SubEventsState extends State<SubEvents> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Center(
-                        child: DropdownButton<String>(
-                          value: dropdownValue,
-                          icon: Icon(Icons.arrow_drop_down),
-                          iconSize: 24,
-                          elevation: 16,
-                          style: TextStyle(
-                            color: Colors.grey
-                          ),
-                          underline: Container(
-                            height: 2,
-                            color: Colors.grey,
-                          ),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              dropdownValue = newValue;
-                            });
-                            dropDown(newValue);
-                          },
-                          items: <String>['One', 'Two', 'Free', 'Add Event']
-                            .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Center(child: Text(value)),
-                              );
-                            })
-                            .toList(),
-                        ),
-                      ),
-                      RaisedButton(
-                        onPressed: () {
-                          SubEvent subEvent = new SubEvent(id: id, name: name, date: date, 
-                                  time: time, location: location, universities: universities, details: list);
-                          Navigator.pop(context, subEvent);
-                        },
-                        child: Text('Add'),
-                      ),
-                    ],
+                  child: RaisedButton(
+                    onPressed: () {
+                      SubEvent subEvent = new SubEvent(id: id, name: name, date: date, 
+                              time: time, location: location, universities: universities, details: list);
+                      Navigator.pop(context, subEvent);
+                    },
+                    child: Text('Add'),
                   ),
                 )
               ],

@@ -15,13 +15,13 @@ class _CategoriesState extends State<Categories> {
   dropDown(String value) async {
     if(value == 'Add Event') {
       final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => SubEvents()));
-      print(result.id);
-      print(result.name);
-      print(result.date);
-      print(result.time);
-      print(result.location);
-      print(result.universities);
-      print(result.description);
+      // print(result.id);
+      // print(result.name);
+      // print(result.date);
+      // print(result.time);
+      // print(result.location);
+      // print(result.universities);
+      // print(result.description);
     }
   }
 
