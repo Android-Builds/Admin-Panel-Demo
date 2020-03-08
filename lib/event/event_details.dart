@@ -2,16 +2,30 @@ import 'package:AdminPanelDemo/models/EventDetail.dart';
 import 'package:flutter/material.dart';
 
 class EventDetailsPage extends StatefulWidget {
+  const EventDetailsPage({this.eventDetail, this.edit = false});
+  final EventDetail eventDetail;
+  final bool edit;
   @override
   _EventDetailsPageState createState() => _EventDetailsPageState();
 }
 
 class _EventDetailsPageState extends State<EventDetailsPage> {
+
   String dropdownValue = 'One';
   String id, header, desc;
   TextEditingController tid = new TextEditingController();
   TextEditingController theader = new TextEditingController();
   TextEditingController tdesc = new TextEditingController();
+
+  @override
+  void initState(){
+    super.initState();
+    if(widget.edit) {
+      tid.text = id = widget.eventDetail.id;
+      theader.text = header = widget.eventDetail.header;
+      tdesc.text = desc = widget.eventDetail.desc;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

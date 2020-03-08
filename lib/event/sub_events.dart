@@ -18,8 +18,7 @@ class _SubEventsState extends State<SubEvents> {
   String universitiesDropDownValue = 'Add Universities';
   List<String> universityList = ['...', 'Add Universities'];
   List<String> detailsList = ['...','Add Event Details'];
-  String id, name, date, time, location, universities, description;
-  TextEditingController tid = new TextEditingController();
+  String name, date, time, location, universities, description;
   TextEditingController tname = new TextEditingController();
   TextEditingController tlocation = new TextEditingController();
   TextEditingController textEditingController4 = new TextEditingController();
@@ -71,7 +70,7 @@ class _SubEventsState extends State<SubEvents> {
       }
       var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => 
         AddUniversititesPage(uni: universityList[index], edit: true)));
-      universitiesDropDownValue = result;
+      result != null ? universitiesDropDownValue = result : NullThrownError();
       setState(() {
         universityList[index] = result;
       });
@@ -80,7 +79,8 @@ class _SubEventsState extends State<SubEvents> {
 
   dropDown(String value) async {
     if(value == 'Add Event Details') {
-      var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsPage()));
+      var result = await Navigator.push(context, 
+            MaterialPageRoute(builder: (context) => EventDetailsPage()));
       result != null ? setState((){
         if (detailsList[0] == '...'){
           detailsList.removeAt(0);
@@ -88,6 +88,19 @@ class _SubEventsState extends State<SubEvents> {
         detailsList.insert(0, result.header);
         listDetails.insert(0, result);
       }) : NullThrownError();
+    } else if (value != '...') {
+      for(int i=0; i<listDetails.length; i++) {
+        if(listDetails[i].header == value) {
+          index = i;
+          break;
+        }
+      }
+      var result = await Navigator.push(context, 
+            MaterialPageRoute(builder: (context) => EventDetailsPage(eventDetail: listDetails[index], edit: true)));
+      result != null ? detailsDropDownValue = result.header : NullThrownError();
+      setState(() {
+        listDetails[index] = result;
+      });
     }
   }
 
@@ -114,24 +127,6 @@ class _SubEventsState extends State<SubEvents> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:40.0),
-                  child: Container(
-                    child: TextField(
-                      controller: tid,
-                      maxLines: 1,
-                      onChanged: (value) {
-                        id = tid.text;
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Event ID",
-                        fillColor: Colors.grey[900],
-                        filled: true,
-                      ),
-                    ),
-                  ),
-                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
                   child: Container(
@@ -318,7 +313,7 @@ class _SubEventsState extends State<SubEvents> {
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
                   child: RaisedButton(
                     onPressed: () {
-                      SubEvent subEvent = new SubEvent(id: id, name: name, date: date, 
+                      SubEvent subEvent = new SubEvent(name: name, date: date, 
                               time: time, location: location, universities: universityList, details: listDetails);
                       Navigator.pop(context, subEvent);
                     },

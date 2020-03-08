@@ -2,7 +2,7 @@ import 'package:AdminPanelDemo/models/EventDetail.dart';
 import 'package:flutter/foundation.dart';
 
 class SubEvent {
-  final String id;
+  final Key id;
   final String name;
   final String date;
   final String time;
