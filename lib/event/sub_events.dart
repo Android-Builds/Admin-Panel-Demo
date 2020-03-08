@@ -1,4 +1,5 @@
 import 'package:AdminPanelDemo/event/event_details.dart';
+import 'package:AdminPanelDemo/models/EventDetail.dart';
 import 'package:AdminPanelDemo/models/SubEvent.dart';
 import 'package:flutter/material.dart';
 
@@ -11,12 +12,15 @@ class _SubEventsState extends State<SubEvents> {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
   String dropdownValue = 'One';
+  String universitiesDropDown = 'Add Universities';
+  List<String> universityList = ['KIIT', 'Add Universities'];
   String id, name, date, time, location, universities, description;
-  TextEditingController textEditingController = new TextEditingController();
-  TextEditingController textEditingController2 = new TextEditingController();
-  TextEditingController textEditingController3 = new TextEditingController();
+  TextEditingController tid = new TextEditingController();
+  TextEditingController tname = new TextEditingController();
+  TextEditingController tlocation = new TextEditingController();
   TextEditingController textEditingController4 = new TextEditingController();
   TextEditingController textEditingController5 = new TextEditingController();
+  var list = <EventDetail>[];
 
   Future<Null> _selectDate(BuildContext context, int n)async {
     final DateTime picked = await showDatePicker(
@@ -37,9 +41,13 @@ class _SubEventsState extends State<SubEvents> {
       //TODO: endDate should not be less than startDate
   }
 
-  dropDown(String value) {
+  dropDown(String value) async {
     if(value == 'Add Event') {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsPage()));
+      var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsPage()));
+      list.add(result);
+      for(int i=0; i<list.length; i++) {
+        print(list[i].header); // to check if the values returned are being added to the list.
+      }
     }
   }
 
@@ -67,69 +75,80 @@ class _SubEventsState extends State<SubEvents> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
-                  child: TextField(
-                    maxLines: 1,
-                    controller: textEditingController,
-                    onChanged: (value) {
-                      id = textEditingController.text;
-                    },
-                    obscureText: false,
-                    style: TextStyle(fontSize: 20.0),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                      hintText: "Event ID",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0)
+                  child: Container(
+                    child: TextField(
+                      controller: tid,
+                      maxLines: 1,
+                      onChanged: (value) {
+                        id = tid.text;
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Event ID",
+                        fillColor: Colors.grey[900],
+                        filled: true,
                       ),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
-                  child: TextField(
-                    maxLines: 1,
-                    controller: textEditingController2,
-                    onChanged: (value) {
-                      name = textEditingController2.text;
-                    },
-                    obscureText: false,
-                    style: TextStyle(fontSize: 20.0),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                      hintText: "Event Name",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0)
+                  child: Container(
+                    child: TextField(
+                      controller: tname,
+                      maxLines: 1,
+                      onChanged: (value) {
+                        name = tname.text;
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Event Name",
+                        fillColor: Colors.grey[900],
+                        filled: true,
                       ),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:35.0),
+                  padding: const EdgeInsets.symmetric(horizontal:40.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      GestureDetector(
-                        onTap: () => _selectDate(context, 1),
-                        child: Container(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text("$date"),
-                                Icon(Icons.arrow_drop_down)
-                              ],
+                      Text('Date'),
+                      Text('Time'),                     
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:40.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () => _selectDate(context, 1),
+                            child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text("$date"),
+                                    Icon(Icons.arrow_drop_down)
+                                  ],
+                                ),
+                              ),
+                              height: 50,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[900],
+                                borderRadius: BorderRadius.circular(5.0)
+                              ),
                             ),
                           ),
-                          height: 50,
-                          width: 120,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(5.0)
-                          ),
-                        ),
+                        ],
                       ),
-                      Text('To'),
                       GestureDetector(
                         onTap: () => _selectDate(context, 2),
                         child: Container(
@@ -146,7 +165,7 @@ class _SubEventsState extends State<SubEvents> {
                           height: 50,
                           width: 120,
                           decoration: BoxDecoration(
-                            color: Colors.black,
+                            color: Colors.grey[900],
                             borderRadius: BorderRadius.circular(5.0)
                           ),
                         ),
@@ -156,39 +175,49 @@ class _SubEventsState extends State<SubEvents> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
-                  child: TextField(
-                    maxLines: 1,
-                    controller: textEditingController3,
-                    onChanged: (value) {
-                      location = textEditingController3.text;
-                    },
-                    obscureText: false,
-                    style: TextStyle(fontSize: 20.0),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                      hintText: "Location",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0)
+                  child: Container(
+                    child: TextField(
+                      controller: tlocation,
+                      maxLines: 1,
+                      onChanged: (value) {
+                        location = tlocation.text;
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Location",
+                        fillColor: Colors.grey[900],
+                        filled: true,
                       ),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
-                  child: TextField(
-                    maxLines: 1,
-                    controller: textEditingController4,
-                    onChanged: (value) {
-                      universities = textEditingController4.text;
-                    },
-                    obscureText: false,
-                    style: TextStyle(fontSize: 20.0),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                      hintText: "Universities",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0)
+                  child: Center(
+                    child: DropdownButton<String>(
+                      value: universitiesDropDown,
+                      icon: Icon(Icons.arrow_drop_down),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: TextStyle(
+                        color: Colors.grey
                       ),
+                      underline: Container(
+                        color: Colors.transparent,
+                      ),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          universitiesDropDown = newValue;
+                        });
+                        // dropDown(newValue);
+                      },
+                      items: universityList.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Center(child: Text(value)),
+                          );
+                        })
+                        .toList(),
                     ),
                   ),
                 ),
@@ -248,7 +277,7 @@ class _SubEventsState extends State<SubEvents> {
                       RaisedButton(
                         onPressed: () {
                           SubEvent subEvent = new SubEvent(id: id, name: name, date: date, 
-                                  time: time, location: location, universities: universities);
+                                  time: time, location: location, universities: universities, details: list);
                           Navigator.pop(context, subEvent);
                         },
                         child: Text('Add'),
