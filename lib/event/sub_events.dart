@@ -5,6 +5,9 @@ import 'package:AdminPanelDemo/models/SubEvent.dart';
 import 'package:flutter/material.dart';
 
 class SubEvents extends StatefulWidget {
+  SubEvents({this.subEvent, this.edit = false});
+  final SubEvent subEvent;
+  final bool edit;
   @override
   _SubEventsState createState() => _SubEventsState();
 }
@@ -21,9 +24,35 @@ class _SubEventsState extends State<SubEvents> {
   String name, date, time, location, universities, description;
   TextEditingController tname = new TextEditingController();
   TextEditingController tlocation = new TextEditingController();
-  TextEditingController textEditingController4 = new TextEditingController();
-  TextEditingController textEditingController5 = new TextEditingController();
-  var listDetails = <EventDetail>[];
+  TextEditingController tdescription = new TextEditingController();
+  List<EventDetail> listDetails = [];
+
+  @override
+  void initState() {
+    super.initState();
+    int i;
+    date = pickedDate.toLocal().toString().split(' ')[0];
+    time = pickedTime.hour.toString() + ':' + pickedTime.minute.toString();
+    if(widget.edit) {
+      tname.text = name = widget.subEvent.name;
+      tlocation.text = location = widget.subEvent.location;
+      tdescription.text = description = widget.subEvent.description;
+      time = widget.subEvent.time;
+      date = widget.subEvent.date;
+      universityList = widget.subEvent.universities;
+      universityList.add('Add Universities');
+      universitiesDropDownValue = universityList[0];
+      if(widget.subEvent.details.isNotEmpty) {
+        listDetails = widget.subEvent.details;
+        detailsList = [];
+        for(i=0; i<widget.subEvent.details.length; i++) {
+            detailsList.add(widget.subEvent.details[i].header);
+        }
+        detailsList.add('Add Event Details');
+        detailsDropDownValue = detailsList[0];
+      }
+    }
+  }
 
   Future<Null> _selectDate(BuildContext context)async {
     final DateTime picked = await showDatePicker(
@@ -54,7 +83,6 @@ class _SubEventsState extends State<SubEvents> {
   universitiesDropDown(String value) async {
     if(value == 'Add Universities') {
       var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddUniversititesPage()));
-      // listDetails.insert(0, result);
       result != null ? setState((){
         if (universityList[0] == '...'){
           universityList.removeAt(0);
@@ -70,10 +98,10 @@ class _SubEventsState extends State<SubEvents> {
       }
       var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => 
         AddUniversititesPage(uni: universityList[index], edit: true)));
-      result != null ? universitiesDropDownValue = result : NullThrownError();
-      setState(() {
+      result != null ? setState(() {
+        universitiesDropDownValue = result;
         universityList[index] = result;
-      });
+      }) : NullThrownError();
     }
   }
 
@@ -97,18 +125,12 @@ class _SubEventsState extends State<SubEvents> {
       }
       var result = await Navigator.push(context, 
             MaterialPageRoute(builder: (context) => EventDetailsPage(eventDetail: listDetails[index], edit: true)));
-      result != null ? detailsDropDownValue = result.header : NullThrownError();
-      setState(() {
+      result != null ? setState(() {
+        detailsDropDownValue = result.header;
+        detailsList[index] = result.header;
         listDetails[index] = result;
-      });
+      }) : NullThrownError();
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    date = pickedDate.toLocal().toString().split(' ')[0];
-    time = pickedTime.hour.toString() + ':' + pickedTime.minute.toString();
   }
 
   @override
@@ -286,7 +308,7 @@ class _SubEventsState extends State<SubEvents> {
                             })
                             .toList(),
                         ),
-                      ),                      
+                      ),
                     ],
                   ),
                 ),
@@ -295,9 +317,9 @@ class _SubEventsState extends State<SubEvents> {
                   child: Container(
                     height: 5 * 24.0,
                     child: TextField(
-                      controller: textEditingController5,
+                      controller: tdescription,
                       onChanged: (value) {
-                        description = textEditingController5.text;
+                        description = tdescription.text;
                       },
                       maxLines: 5,
                       decoration: InputDecoration(
@@ -313,8 +335,10 @@ class _SubEventsState extends State<SubEvents> {
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
                   child: RaisedButton(
                     onPressed: () {
-                      SubEvent subEvent = new SubEvent(name: name, date: date, 
-                              time: time, location: location, universities: universityList, details: listDetails);
+                      universityList.removeLast();
+                      var uniList = universityList;
+                      SubEvent subEvent = new SubEvent(name: name, date: date, description: description,
+                              time: time, location: location, universities: uniList, details: listDetails);
                       Navigator.pop(context, subEvent);
                     },
                     child: Text('Add'),

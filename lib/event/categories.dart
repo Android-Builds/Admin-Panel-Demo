@@ -1,4 +1,5 @@
 import 'package:AdminPanelDemo/event/sub_events.dart';
+import 'package:AdminPanelDemo/models/SubEvent.dart';
 import 'package:flutter/material.dart';
 
 class Categories extends StatefulWidget {
@@ -10,18 +11,42 @@ class _CategoriesState extends State<Categories> {
 
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
-  String dropdownValue = 'One';
+  String dropDownValue = 'Add Sub Event';
+  String name;
+  int id, index;
+  List<String> subEvents = ['...','Add Sub Event'];
+  TextEditingController tid = new TextEditingController();
+  TextEditingController tname = new TextEditingController();
+  var subEventList = <SubEvent>[];
 
   dropDown(String value) async {
-    if(value == 'Add Event') {
-      final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => SubEvents()));
-      // print(result.id);
-      // print(result.name);
-      // print(result.date);
-      // print(result.time);
-      // print(result.location);
-      // print(result.universities);
-      // print(result.description);
+    if(value == 'Add Sub Event') {
+      var result = await Navigator.push(context, 
+            MaterialPageRoute(builder: (context) => SubEvents()));
+      result != null ? setState((){
+        if (subEvents[0] == '...'){
+          subEvents.removeAt(0);
+        }
+        subEvents.insert(0, result.name);
+        subEventList.insert(0, result);
+        // print(result.details[0].header);
+      }) : NullThrownError();
+    } else if (value != '...') {
+      for(int i=0; i<subEventList.length; i++) {
+        if(subEventList[i].name == value) {
+          index = i;
+          break;
+        }
+      }
+      var result = await Navigator.push(context, 
+            MaterialPageRoute(builder: (context) => SubEvents(subEvent: subEventList[index], edit: true)));
+      result != null ? dropDownValue = result.name : NullThrownError();
+      for(int i=0; i<subEventList.length; i++) {
+        // print(subEventList[i].details[i].header);
+      }
+      setState(() {
+        subEventList[index] = result;
+      });
     }
   }
 
@@ -46,37 +71,43 @@ class _CategoriesState extends State<Categories> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
-                child: TextField(
-                  maxLines: 1,
-                  obscureText: false,
-                  style: TextStyle(fontSize: 20.0),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                    hintText: "Category ID",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0)
+                child: Container(
+                  child: TextField(
+                    controller: tid,
+                    maxLines: 1,
+                    onChanged: (value) {
+                      id = int.parse(tid.text);
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Category ID",
+                      fillColor: Colors.grey[900],
+                      filled: true,
                     ),
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
-                child: TextField(
-                  maxLines: 1,
-                  obscureText: false,
-                  style: TextStyle(fontSize: 20.0),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                    hintText: "Category Name",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0)
+                child: Container(
+                  child: TextField(
+                    controller: tname,
+                    maxLines: 1,
+                    onChanged: (value) {
+                      name = tname.text;
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Category Name",
+                      fillColor: Colors.grey[900],
+                      filled: true,
                     ),
                   ),
                 ),
               ),
               Center(
                 child: DropdownButton<String>(
-                  value: dropdownValue,
+                  value: dropDownValue,
                   icon: Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
@@ -84,16 +115,15 @@ class _CategoriesState extends State<Categories> {
                     color: Colors.grey
                   ),
                   underline: Container(
-                    height: 2,
-                    color: Colors.grey,
+                    color: Colors.transparent,
                   ),
                   onChanged: (String newValue) {
                     setState(() {
-                      dropdownValue = newValue;
+                      dropDownValue = newValue;
                     });
                     dropDown(newValue);
                   },
-                  items: <String>['One', 'Two', 'Free', 'Add Event']
+                  items: subEvents
                     .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
