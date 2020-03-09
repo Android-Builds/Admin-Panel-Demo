@@ -21,7 +21,9 @@ class _SubEventsState extends State<SubEvents> {
   String universitiesDropDownValue = 'Add Universities';
   List<String> universityList = ['...', 'Add Universities'];
   List<String> detailsList = ['...','Add Event Details'];
-  String name, date, time, location, universities, description;
+  String name, date, time, location, description;
+  String university;
+  TextEditingController tuniversity = new TextEditingController();
   TextEditingController tname = new TextEditingController();
   TextEditingController tlocation = new TextEditingController();
   TextEditingController tdescription = new TextEditingController();
@@ -80,15 +82,64 @@ class _SubEventsState extends State<SubEvents> {
     }
   }
 
+  Future<void> _askedToLead(bool editUni) async {
+    if(editUni) {
+      tuniversity.text = university = universityList[index];
+    }
+    showDialog<Department>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select University'),
+          content: TextField(
+            controller: tuniversity,
+            onChanged: (value) {
+              university = tuniversity.text;
+            },
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: "University",
+              fillColor: Colors.grey[900],
+              // filled: true,
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Delete'),
+            ),
+            FlatButton(
+              onPressed: () {
+                if(!editUni) {
+                  var result = university;
+                  result != null ? setState((){
+                    if (universityList[0] == '...'){
+                      universityList.removeAt(0);
+                    }
+                  universityList.insert(0, result);
+                }) : NullThrownError();
+                }
+                else {
+                  var result = university;
+                  result != null ? setState(() {
+                    universitiesDropDownValue = result;
+                    universityList[index] = result;
+                  }) : NullThrownError();                  
+                }
+                Navigator.pop(context);
+              },
+              child: Text('Add'),
+            ),            
+          ],
+        );
+      }
+    );
+  }
+
   universitiesDropDown(String value) async {
     if(value == 'Add Universities') {
-      var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddUniversititesPage()));
-      result != null ? setState((){
-        if (universityList[0] == '...'){
-          universityList.removeAt(0);
-        }
-        universityList.insert(0, result);
-      }) : NullThrownError();
+      tuniversity.clear();
+      _askedToLead(false);
     } else if(value != '...') {
       for(int i=0; i<universityList.length; i++) {
         if(value == universityList[i]) {
@@ -96,12 +147,7 @@ class _SubEventsState extends State<SubEvents> {
           break;
         }
       }
-      var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => 
-        AddUniversititesPage(uni: universityList[index], edit: true)));
-      result != null ? setState(() {
-        universitiesDropDownValue = result;
-        universityList[index] = result;
-      }) : NullThrownError();
+      _askedToLead(true);
     }
   }
 
