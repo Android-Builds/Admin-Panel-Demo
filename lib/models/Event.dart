@@ -6,12 +6,14 @@ class Event {
   final String name;
   final String startDate;
   final String endDate;
+  final String theme;
   final List<EventCategory> eventCategories;
   Event({
     @required this.id,
     @required this.name,
     @required this.startDate,
     @required this.endDate,
+    this.theme,
     @required this.eventCategories
   });
 }

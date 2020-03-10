@@ -1,4 +1,5 @@
 import 'package:AdminPanelDemo/event/events.dart';
+import 'package:AdminPanelDemo/models/Event.dart';
 import 'package:flutter/material.dart';
 
 class DefaultEvents extends StatefulWidget {
@@ -7,11 +8,35 @@ class DefaultEvents extends StatefulWidget {
 }
 
 class _DefaultEventsState extends State<DefaultEvents> {
-  String dropdownValue = 'One';
+  int i, index;
+  String dropdownValue = 'Add Event';
+  List<String> eventList = ['...', 'Add Event'];
+  List<Event> events = [];
 
-  dropDown(String value) {
+  dropDown(String value) async {
     if(value == 'Add Event') {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Events()));
+      var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => Events()));
+      result != null ? setState(() {
+        if(eventList[0] == '...') {
+          eventList.removeAt(0);
+        }
+        events.insert(0, result);
+        eventList.insert(0, result.name);
+      }) : NullThrownError();
+    } else if (value != '...') {
+      for(i=0; i<events.length; i++) {
+        if(events[i].name == value) {
+          index = i;
+          break;
+        }
+      }
+      var result = await Navigator.push(context, MaterialPageRoute(builder: 
+          (context) => Events(event: events[index], edit: true)));
+      result != null ? setState(() {
+        dropdownValue = result.name;
+        eventList[index] = result.name;
+        events[index] = result;
+      }) : NullThrownError();
     }
   }
 
@@ -47,7 +72,7 @@ class _DefaultEventsState extends State<DefaultEvents> {
                     });
                     dropDown(newValue);
                   },
-                  items: <String>['One', 'Two', 'Free', 'Add Event']
+                  items: eventList
                     .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

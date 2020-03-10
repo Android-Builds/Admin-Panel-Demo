@@ -13,10 +13,10 @@ class Events extends StatefulWidget {
 
 class _EventsState extends State<Events> {
   
-  int index;
-  String id, name, theme;
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
+  int i, index;
+  String id, name, theme, startDate, endDate;
+  DateTime sDate = DateTime.now();
+  DateTime eDate = DateTime.now();
   String dropDownValue = 'Add Event Categories';
   List<String> categoryList = ['...', 'Add Event Categories'];
   List<EventCategory> listCategory = [];
@@ -55,15 +55,17 @@ class _EventsState extends State<Events> {
   Future<Null> _selectDate(BuildContext context, int n)async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: n == 1 ? startDate : endDate,
+        initialDate: n == 1 ? sDate : eDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != DateTime.now())
       setState(() {
         if(n == 1) {
-          startDate = picked;
+          sDate = picked;
+          startDate = sDate.toLocal().toString().split(' ')[0];
         } else {
-          endDate = picked;
+          eDate = picked;
+          endDate = eDate.toLocal().toString().split(' ')[0];
         }
       });
       //TODO: endDate should not be less than startDate
@@ -72,11 +74,24 @@ class _EventsState extends State<Events> {
   @override
   void initState() {
     super.initState();
+    startDate = sDate.toLocal().toString().split(' ')[0];
+    endDate = eDate.toLocal().toString().split(' ')[0];
     if(widget.edit) {
+      startDate = widget.event.startDate;
+      endDate = widget.event.endDate;
       tid.text = id = widget.event.id;
       tname.text = name = widget.event.name;
-      if(widget.event.eventCategories.length != null) {
-        
+      ttheme.text = theme = widget.event.theme;
+      startDate = widget.event.startDate;
+      endDate = widget.event.endDate;
+      if(widget.event.eventCategories.isNotEmpty) {
+        listCategory = widget.event.eventCategories;
+        categoryList = [];
+        for(i=0; i<listCategory.length; i++) {
+          categoryList.add(listCategory[i].name);
+        }
+        categoryList.insert(i, 'Add Event Categories');
+        dropDownValue = categoryList[0];
       }
     }
   }
@@ -140,7 +155,7 @@ class _EventsState extends State<Events> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text("${startDate.toLocal()}".split(' ')[0]),
+                              Text("$startDate"),
                               Icon(Icons.arrow_drop_down)
                             ],
                           ),
@@ -162,7 +177,7 @@ class _EventsState extends State<Events> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text("${endDate.toLocal()}".split(' ')[0]),
+                              Text("$endDate"),
                               Icon(Icons.arrow_drop_down)
                             ],
                           ),
@@ -228,7 +243,11 @@ class _EventsState extends State<Events> {
                 child: Align(
                   alignment: FractionalOffset.bottomRight,
                   child: RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Event event = new Event(id: null, name: name, startDate: startDate, 
+                        endDate: endDate, theme: theme, eventCategories: listCategory);
+                        Navigator.pop(context, event);
+                    },
                     child: Text('Add'),
                   ),
                 ),
