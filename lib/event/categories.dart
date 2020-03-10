@@ -1,23 +1,43 @@
 import 'package:AdminPanelDemo/event/sub_events.dart';
+import 'package:AdminPanelDemo/models/EventCagory.dart';
 import 'package:AdminPanelDemo/models/SubEvent.dart';
 import 'package:flutter/material.dart';
 
 class Categories extends StatefulWidget {
+  Categories({this.eventCategory, this.edit = false});
+  final EventCategory eventCategory;
+  final bool edit;
   @override
   _CategoriesState createState() => _CategoriesState();
 }
 
 class _CategoriesState extends State<Categories> {
 
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
   String dropDownValue = 'Add Sub Event';
   String name;
-  int id, index;
+  int i, id, index;
   List<String> subEvents = ['...','Add Sub Event'];
   TextEditingController tid = new TextEditingController();
   TextEditingController tname = new TextEditingController();
   var subEventList = <SubEvent>[];
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.edit) {
+      tname.text = name = widget.eventCategory.name;
+      id = widget.eventCategory.id;
+      tid.text = id.toString();
+      if(widget.eventCategory.subEvents.isNotEmpty) {
+        subEventList = widget.eventCategory.subEvents;
+        for(i=0; i<subEventList.length; i++) {
+          subEvents.add(widget.eventCategory.subEvents[i].name);
+        }
+        subEvents.insert(i,'Add Sub Event');
+        dropDownValue = subEvents[0];
+      }
+    }
+  }
 
   dropDown(String value) async {
     if(value == 'Add Sub Event') {
@@ -29,7 +49,6 @@ class _CategoriesState extends State<Categories> {
         }
         subEvents.insert(0, result.name);
         subEventList.insert(0, result);
-        // print(result.details[0].header);
       }) : NullThrownError();
     } else if (value != '...') {
       for(int i=0; i<subEventList.length; i++) {
@@ -41,9 +60,6 @@ class _CategoriesState extends State<Categories> {
       var result = await Navigator.push(context, 
             MaterialPageRoute(builder: (context) => SubEvents(subEvent: subEventList[index], edit: true)));
       result != null ? dropDownValue = result.name : NullThrownError();
-      for(int i=0; i<subEventList.length; i++) {
-        // print(subEventList[i].details[i].header);
-      }
       setState(() {
         subEventList[index] = result;
       });
@@ -138,7 +154,10 @@ class _CategoriesState extends State<Categories> {
                 child: Align(
                   alignment: FractionalOffset.bottomRight,
                   child: RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      EventCategory eventCategory = new EventCategory(id: null, name: name, subEvents: subEventList);
+                      Navigator.pop(context, eventCategory);
+                    },
                     child: Text('Add'),
                   ),
                 ),

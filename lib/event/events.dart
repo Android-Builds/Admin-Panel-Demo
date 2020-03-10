@@ -1,21 +1,55 @@
 import 'package:AdminPanelDemo/event/categories.dart';
+import 'package:AdminPanelDemo/models/Event.dart';
+import 'package:AdminPanelDemo/models/EventCagory.dart';
 import 'package:flutter/material.dart';
 
 class Events extends StatefulWidget {
+  Events({this.event, this.edit = false});
+  final Event event;
+  final bool edit;
   @override
   _EventsState createState() => _EventsState();
 }
 
 class _EventsState extends State<Events> {
-
+  
+  int index;
+  String id, name, theme;
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
-  String dropdownValue = 'One';
+  String dropDownValue = 'Add Event Categories';
+  List<String> categoryList = ['...', 'Add Event Categories'];
+  List<EventCategory> listCategory = [];
+  TextEditingController tid = new TextEditingController();
+  TextEditingController tname = new TextEditingController();
+  TextEditingController ttheme = new TextEditingController();
 
-  dropDown(String value) {
-    if(value == 'Add Event') {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Categories()));
+  dropDown(String value) async {
+    if(value == 'Add Event Categories') {
+      var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => Categories()));
+      result != null ? setState((){
+        if (categoryList[0] == '...'){
+          categoryList.removeAt(0);
+        }
+        categoryList.insert(0, result.name);
+        listCategory.insert(0, result);
+      }) : NullThrownError();
+    } else if (value != '...') {
+      for(int i=0; i<listCategory.length; i++) {
+        if(listCategory[i].name == value) {
+          index = i;
+          break;
+        }
+      }
+      var result = await Navigator.push(context, 
+            MaterialPageRoute(builder: (context) => Categories(eventCategory: listCategory[index], edit: true)));
+      result != null ? setState(() {
+        dropDownValue = result.name;
+        categoryList[index] = result.name;
+        listCategory[index] = result;
+      }) : NullThrownError();
     }
+    //TODO: Address error on having same element in the list
   }
 
   Future<Null> _selectDate(BuildContext context, int n)async {
@@ -36,6 +70,18 @@ class _EventsState extends State<Events> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if(widget.edit) {
+      tid.text = id = widget.event.id;
+      tname.text = name = widget.event.name;
+      if(widget.event.eventCategories.length != null) {
+        
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -47,35 +93,37 @@ class _EventsState extends State<Events> {
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
                 child: TextField(
+                  controller: tid,
+                  onChanged: (value) {
+                    id = tid.text;
+                  },
                   maxLines: 1,
-                  obscureText: false,
-                  style: TextStyle(fontSize: 20.0),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                    fillColor: Colors.grey[900],
+                    filled: true,
                     hintText: "Event ID",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0)
-                    ),
+                    border: InputBorder.none
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
                 child: TextField(
+                  controller: tname,
+                  onChanged: (value) {
+                    name = tname.text;
+                  },                  
                   maxLines: 1,
-                  obscureText: false,
-                  style: TextStyle(fontSize: 20.0),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                     hintText: "Event Name",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0)
-                    ),
+                    border: InputBorder.none,
+                    fillColor: Colors.grey[900],
+                    filled: true,
                   ),
                 ),
               ),
@@ -100,7 +148,7 @@ class _EventsState extends State<Events> {
                         height: 50,
                         width: 120,
                         decoration: BoxDecoration(
-                          color: Colors.black,
+                          color: Colors.grey[900],
                           borderRadius: BorderRadius.circular(5.0)
                         ),
                       ),
@@ -122,7 +170,7 @@ class _EventsState extends State<Events> {
                         height: 50,
                         width: 120,
                         decoration: BoxDecoration(
-                          color: Colors.black,
+                          color: Colors.grey[900],
                           borderRadius: BorderRadius.circular(5.0)
                         ),
                       ),
@@ -133,21 +181,22 @@ class _EventsState extends State<Events> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
                 child: TextField(
+                  controller: ttheme,
+                  onChanged: (value) {
+                    theme = ttheme.text;
+                  },                  
                   maxLines: 1,
-                  obscureText: false,
-                  style: TextStyle(fontSize: 20.0),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                     hintText: "Theme",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0)
-                    ),
+                    fillColor: Colors.grey[900],
+                    filled: true,
+                    border: InputBorder.none,
                   ),
                 ),
               ),
               Center(
                 child: DropdownButton<String>(
-                  value: dropdownValue,
+                  value: dropDownValue,
                   icon: Icon(Icons.arrow_drop_down),
                   iconSize: 24,
                   elevation: 16,
@@ -160,11 +209,11 @@ class _EventsState extends State<Events> {
                   ),
                   onChanged: (String newValue) {
                     setState(() {
-                      dropdownValue = newValue;
+                      dropDownValue = newValue;
                     });
                     dropDown(newValue);
                   },
-                  items: <String>['One', 'Two', 'Free', 'Add Event']
+                  items: categoryList
                     .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

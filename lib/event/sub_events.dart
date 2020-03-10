@@ -388,6 +388,7 @@ class _SubEventsState extends State<SubEvents> {
                       Navigator.pop(context, subEvent);
                     },
                     child: Text('Add'),
+                    //TODO: Add error message if name is null
                   ),
                 )
               ],
