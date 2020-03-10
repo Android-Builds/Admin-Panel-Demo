@@ -1,4 +1,5 @@
 import 'package:AdminPanelDemo/event/default_events.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -6,8 +7,10 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+ExpandableController first = new ExpandableController();
+ExpandableController second = new ExpandableController();
 
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,6 +41,25 @@ class _HomePageState extends State<HomePage> {
               Container(
                 height: 300.0,
                 width: 350.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10, left: 20.0),
+                  child: ExpandablePanel(
+                    controller: first,
+                    header: Text( 'Hi',
+                      maxLines: 2,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    expanded: ExpandablePanel(
+                      controller: second,
+                      header: Text(
+                        'Hello',
+                        softWrap: true,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      expanded: Text('Hey', style: TextStyle(color: Colors.black),),
+                    ),
+                  ),
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8.0)

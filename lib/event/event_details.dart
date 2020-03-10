@@ -16,6 +16,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
   TextEditingController tid = new TextEditingController();
   TextEditingController theader = new TextEditingController();
   TextEditingController tdesc = new TextEditingController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState(){
@@ -30,6 +31,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Event Details'),
@@ -100,8 +102,12 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                   alignment: FractionalOffset.bottomRight,
                   child: RaisedButton(
                     onPressed: () {
-                      EventDetail eventDetail = new EventDetail(id: id, header: header, desc: desc);
-                      Navigator.pop(context, eventDetail);
+                      if(header != null) {
+                        EventDetail eventDetail = new EventDetail(id: id, header: header, desc: desc);
+                        Navigator.pop(context, eventDetail);
+                      } else {
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Add Header first !')));
+                      }
                     },
                     child: Text('Add'),
                   ),

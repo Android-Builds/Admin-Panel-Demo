@@ -1,5 +1,6 @@
 import 'package:AdminPanelDemo/event/events.dart';
 import 'package:AdminPanelDemo/models/Event.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 
 class DefaultEvents extends StatefulWidget {
@@ -46,71 +47,90 @@ class _DefaultEventsState extends State<DefaultEvents> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text('Default'),
+          title: Text('Admin Panel'),
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height / 2.2,
-              child: Center(
-                child: DropdownButton<String>(
-                  value: dropdownValue,
-                  icon: Icon(Icons.arrow_drop_down),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(
-                    color: Colors.grey
-                  ),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.grey,
-                  ),
-                  onChanged: (String newValue) {
-                    setState(() {
-                      dropdownValue = newValue;
-                    });
-                    dropDown(newValue);
-                  },
-                  items: eventList
-                    .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Center(child: Text(value)),
-                      );
-                    })
-                    .toList(),
-                ),
-              ),
-            ),
-            Divider(thickness: 2.0),
-            Expanded(
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal:50.0, vertical: 10.0),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "Name of Event",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0)
-                            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('Events: '),
+                SizedBox(height: 10.0),
+                Container(
+                  height: 300.0,
+                  width: 350.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10, left: 20.0),
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: events.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ExpandablePanel(
+                          iconColor: Colors.white,
+                          header: Text(events[index].name),
+                          expanded: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              events[index].theme != null ? Text('Theme: ' + events[index].theme) : Container(),
+                              SizedBox(height: 10.0),
+                              events[index].startDate != null ? Text('Start Date: ' + events[index].startDate) : Container(),
+                              SizedBox(height: 10.0),
+                              events[index].endDate != null ? Text('End Date: ' +events[index].endDate) : Container(),
+                              SizedBox(height: 10.0),
+                            ],
                           ),
-                        ),
-                      ),
-                      SizedBox(height:40.0),
-                      RaisedButton(
-                        onPressed: () {},
-                        child: Text('New'),
-                      )
-                    ],
+                        );
+                      }, 
+                      separatorBuilder: (BuildContext context, int index) => const Divider(height: 20.0,thickness: 2.0,),
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[900],
+                    borderRadius: BorderRadius.circular(8.0)
                   ),
                 ),
-              ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Center(
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: Icon(Icons.arrow_drop_down),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(
+                      color: Colors.grey
+                    ),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.grey,
+                    ),
+                    onChanged: (String newValue) {
+                      setState(() {
+                        dropdownValue = newValue;
+                      });
+                      dropDown(newValue);
+                    },
+                    items: eventList
+                      .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Center(child: Text(value)),
+                        );
+                      })
+                      .toList(),
+                  ),
+                ),
+                // Center(
+                //   child: RaisedButton(
+                //     onPressed: () {},
+                //     child: Text('New'),
+                //   ),
+                // ),
+              ],
             ),
           ],
         ),

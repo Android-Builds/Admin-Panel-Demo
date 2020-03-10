@@ -1,4 +1,5 @@
 import 'package:AdminPanelDemo/constatnts.dart';
+import 'package:AdminPanelDemo/event/default_events.dart';
 import 'package:AdminPanelDemo/home.dart';
 import 'package:flutter/material.dart';
 import 'login_widget.dart';
@@ -16,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   login() {
     print('called');
     if(userid == 'admin' && password == 'password') {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DefaultEvents()));
     } else {
       _scaffoldKey.currentState.removeCurrentSnackBar();
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Wrong Username or Password !')));

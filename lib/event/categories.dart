@@ -20,6 +20,7 @@ class _CategoriesState extends State<Categories> {
   TextEditingController tid = new TextEditingController();
   TextEditingController tname = new TextEditingController();
   var subEventList = <SubEvent>[];
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -70,6 +71,7 @@ class _CategoriesState extends State<Categories> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text(
@@ -155,8 +157,12 @@ class _CategoriesState extends State<Categories> {
                   alignment: FractionalOffset.bottomRight,
                   child: RaisedButton(
                     onPressed: () {
-                      EventCategory eventCategory = new EventCategory(id: null, name: name, subEvents: subEventList);
-                      Navigator.pop(context, eventCategory);
+                      if(name != null) {
+                        EventCategory eventCategory = new EventCategory(id: null, name: name, subEvents: subEventList);
+                        Navigator.pop(context, eventCategory);
+                      } else {
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Add Category name !')));
+                      }
                     },
                     child: Text('Add'),
                   ),

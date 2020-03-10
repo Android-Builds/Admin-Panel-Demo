@@ -28,6 +28,7 @@ class _SubEventsState extends State<SubEvents> {
   TextEditingController tlocation = new TextEditingController();
   TextEditingController tdescription = new TextEditingController();
   List<EventDetail> listDetails = [];
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -183,6 +184,7 @@ class _SubEventsState extends State<SubEvents> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text('Sub Events'),
@@ -381,11 +383,15 @@ class _SubEventsState extends State<SubEvents> {
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
                   child: RaisedButton(
                     onPressed: () {
-                      universityList.removeLast();
-                      var uniList = universityList;
-                      SubEvent subEvent = new SubEvent(name: name, date: date, description: description,
-                              time: time, location: location, universities: uniList, details: listDetails);
-                      Navigator.pop(context, subEvent);
+                      if(name != null) {
+                        universityList.removeLast();
+                        var uniList = universityList;
+                        SubEvent subEvent = new SubEvent(name: name, date: date, description: description,
+                                time: time, location: location, universities: uniList, details: listDetails);
+                        Navigator.pop(context, subEvent);
+                      } else {
+                       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Missing event name !')));
+                      }
                     },
                     child: Text('Add'),
                     //TODO: Add error message if name is null

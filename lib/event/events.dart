@@ -23,6 +23,7 @@ class _EventsState extends State<Events> {
   TextEditingController tid = new TextEditingController();
   TextEditingController tname = new TextEditingController();
   TextEditingController ttheme = new TextEditingController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   dropDown(String value) async {
     if(value == 'Add Event Categories') {
@@ -100,6 +101,7 @@ class _EventsState extends State<Events> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text('Events'),
@@ -244,9 +246,13 @@ class _EventsState extends State<Events> {
                   alignment: FractionalOffset.bottomRight,
                   child: RaisedButton(
                     onPressed: () {
-                      Event event = new Event(id: null, name: name, startDate: startDate, 
-                        endDate: endDate, theme: theme, eventCategories: listCategory);
+                      if(name != null) {
+                        Event event = new Event(id: null, name: name, startDate: startDate, 
+                          endDate: endDate, theme: theme, eventCategories: listCategory);
                         Navigator.pop(context, event);
+                      } else {
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Add Event Name first !')));
+                      }
                     },
                     child: Text('Add'),
                   ),
