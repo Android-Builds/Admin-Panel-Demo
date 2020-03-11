@@ -2,6 +2,7 @@ import 'package:AdminPanelDemo/constatnts.dart';
 import 'package:AdminPanelDemo/event/default_events.dart';
 import 'package:AdminPanelDemo/home.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_widget.dart';
 
 class LoginPage extends StatefulWidget {
@@ -13,15 +14,28 @@ class _LoginPageState extends State<LoginPage> {
   //TODO: Add a logic to retain username and password when setState is evoked [remember me]
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool rememberMe;
 
   login() {
     print('called');
     if(userid == 'admin' && password == 'password') {
+      _setRememberMe(rememberMe);
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DefaultEvents()));
     } else {
       _scaffoldKey.currentState.removeCurrentSnackBar();
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Wrong Username or Password !')));
     }
+  }
+
+  void initState() {
+    super.initState();
+    rememberMe = false;
+  }
+
+  _setRememberMe(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('rememberMe', value);
+    prefs.commit();
   }
 
   @override
