@@ -1,7 +1,11 @@
 import 'package:AdminPanelDemo/event/events.dart';
+import 'package:AdminPanelDemo/login/login.dart';
 import 'package:AdminPanelDemo/models/Event.dart';
+import 'package:AdminPanelDemo/views/view_event.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DefaultEvents extends StatefulWidget {
   @override
@@ -48,6 +52,16 @@ class _DefaultEventsState extends State<DefaultEvents> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text('Admin Panel'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Entypo.log_out), 
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                prefs.setBool('rememberMe', false);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(),));
+              }
+            ),
+          ],
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -69,16 +83,19 @@ class _DefaultEventsState extends State<DefaultEvents> {
                         return ExpandablePanel(
                           iconColor: Colors.white,
                           header: Text(events[index].name),
-                          expanded: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              events[index].theme != null ? Text('Theme: ' + events[index].theme) : Container(),
-                              SizedBox(height: 10.0),
-                              events[index].startDate != null ? Text('Start Date: ' + events[index].startDate) : Container(),
-                              SizedBox(height: 10.0),
-                              events[index].endDate != null ? Text('End Date: ' +events[index].endDate) : Container(),
-                              SizedBox(height: 10.0),
-                            ],
+                          expanded: GestureDetector(
+                            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEventPage(event: events[index]))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                events[index].theme != null ? Text('Theme: ' + events[index].theme) : Container(),
+                                SizedBox(height: 10.0),
+                                events[index].startDate != null ? Text('Start Date: ' + events[index].startDate) : Container(),
+                                SizedBox(height: 10.0),
+                                events[index].endDate != null ? Text('End Date: ' +events[index].endDate) : Container(),
+                                SizedBox(height: 10.0),
+                              ],
+                            ),
                           ),
                         );
                       }, 

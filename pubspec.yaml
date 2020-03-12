@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   expandable:
   shared_preferences:
+  flutter_vector_icons:
 
 dev_dependencies:
   flutter_test:
