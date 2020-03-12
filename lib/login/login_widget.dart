@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import '../constatnts.dart';
 
 class LoginWidget extends StatelessWidget {
-  const LoginWidget({Key key}) : super(key: key);
+  const LoginWidget({Key key, @required this.user, @required this.pass}) : super(key: key);
+  final TextEditingController user;
+  final TextEditingController pass;
   @override
   Widget build(BuildContext context) {
-    final user = new TextEditingController();
-    final pass = new TextEditingController();
+    // final user = new TextEditingController();
+    // final pass = new TextEditingController();
 
     return Container(
       child: SingleChildScrollView(
@@ -32,13 +34,11 @@ class LoginWidget extends StatelessWidget {
                   },
                   maxLines: 1,
                   obscureText: false,
-                  style: TextStyle(fontSize: 20.0),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                     hintText: "User ID",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0)
-                    ),
+                    border: InputBorder.none,
+                    fillColor: Colors.grey[900],
+                    filled: true
                   ),
                 ),
               ),
@@ -52,13 +52,11 @@ class LoginWidget extends StatelessWidget {
                   },
                   maxLines: 1,
                   obscureText: true,
-                  style: TextStyle(fontSize: 20.0),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                     hintText: "Password",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0)
-                    ),
+                    border: InputBorder.none,
+                    fillColor: Colors.grey[900],
+                    filled: true
                   ),
                 ),
               ),

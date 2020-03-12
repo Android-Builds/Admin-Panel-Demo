@@ -22,60 +22,52 @@ class _ViewEventPageState extends State<ViewEventPage> {
         appBar: AppBar(title: Text("ListView")),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: ListView(
+          child: Column(
             children: <Widget>[
-              Container(
-                // margin: EdgeInsets.symmetric(vertical: 10),
-                height: MediaQuery.of(context).size.height-100.0,
+              Padding(
+                padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            widget.event.name,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0
+                    Text(
+                      widget.event.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0
+                      ),
+                    ),
+                    SizedBox(height:20.0),
+                    widget.event.theme != null ? Text('Theme: ' + widget.event.theme) : Container(),
+                    widget.event.startDate != null ? Text('Start Date: ' + widget.event.startDate) : Container(),
+                    widget.event.endDate != null ? Text('End Date: ' + widget.event.endDate) : Container(),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: widget.event.eventCategories.length,
+                  itemBuilder: (_, j) { 
+                    return ListTile(
+                      title: ExpandablePanel(
+                        iconColor: Colors.white,
+                        header: Text(widget.event.eventCategories[j].name),
+                        expanded: Padding(
+                          padding: const EdgeInsets.only(bottom: 20.0),
+                          child: Expanded(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: widget.event.eventCategories[j].subEvents.length,
+                              itemBuilder: (context, k) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: SubEventsExpandable(widget: widget, i: i, j: j, k: k)
+                                );
+                              }
                             ),
                           ),
-                          SizedBox(height:20.0),
-                          widget.event.theme != null ? Text('Theme: ' + widget.event.theme) : Container(),
-                          widget.event.startDate != null ? Text('Start Date: ' + widget.event.startDate) : Container(),
-                          widget.event.endDate != null ? Text('End Date: ' + widget.event.endDate) : Container(),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: widget.event.eventCategories.length,
-                        itemBuilder: (_, j) { 
-                          return ListTile(
-                            title: ExpandablePanel(
-                              iconColor: Colors.white,
-                              header: Text(widget.event.eventCategories[j].name),
-                              expanded: Padding(
-                                padding: const EdgeInsets.only(bottom: 20.0),
-                                child: Expanded(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: widget.event.eventCategories[j].subEvents.length,
-                                    itemBuilder: (context, k) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: SubEventsExpandable(widget: widget, i: i, j: j, k: k)
-                                      );
-                                    }
-                                  ),
-                                ),
-                              ),
-                            )
-                          );
-                        }
-                      ),
-                    ),
-                  ],
+                        ),
+                      )
+                    );
+                  }
                 ),
               ),
             ],

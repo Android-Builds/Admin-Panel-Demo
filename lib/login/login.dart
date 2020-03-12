@@ -14,6 +14,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool rememberMe;
+  final user = new TextEditingController();
+  final pass = new TextEditingController();
 
   login() {
     print('called');
@@ -57,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              LoginWidget(),
+              LoginWidget(user: user, pass: pass),
               SizedBox(height:10.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -72,6 +74,8 @@ class _LoginPageState extends State<LoginPage> {
                           onChanged: (value) {
                             setState(() {
                               rememberMe = value;
+                              pass.text = password;
+                              user.text = userid;
                             });
                           }
                         ),
