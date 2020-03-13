@@ -12,7 +12,6 @@ class ViewEventPage extends StatefulWidget {
 
 class _ViewEventPageState extends State<ViewEventPage> {
 
-  int i = 0;
   ExpandableController second = new ExpandableController();
 
   @override
@@ -59,7 +58,7 @@ class _ViewEventPageState extends State<ViewEventPage> {
                               itemBuilder: (context, k) {
                                 return Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: SubEventsExpandable(widget: widget, i: i, j: j, k: k)
+                                  child: SubEventsExpandable(widget: widget, j: j, k: k)
                                 );
                               }
                             ),

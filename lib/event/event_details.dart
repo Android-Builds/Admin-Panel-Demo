@@ -97,20 +97,32 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right:45.0, bottom: 40.0),
-                child: Align(
-                  alignment: FractionalOffset.bottomRight,
-                  child: RaisedButton(
-                    onPressed: () {
-                      if(header != null) {
-                        EventDetail eventDetail = new EventDetail(id: id, header: header, desc: desc);
-                        Navigator.pop(context, eventDetail);
-                      } else {
-                        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Add Header first !')));
-                      }
-                    },
-                    child: Text('Add'),
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal:45.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    RaisedButton(
+                      onPressed: () {
+                        if(widget.edit == true) {
+                          Navigator.pop(context, 'Delete');
+                        } else {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Nothing to delete !')));
+                        }
+                      },
+                      child: Text('Delete'),
+                    ),
+                    RaisedButton(
+                      onPressed: () {
+                        if(header != null) {
+                          EventDetail eventDetail = new EventDetail(id: id, header: header, desc: desc);
+                          Navigator.pop(context, eventDetail);
+                        } else {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Add Header first !')));
+                        }
+                      },
+                      child: Text('Add'),
+                    ),
+                  ],
                 ),
               ),
             ],

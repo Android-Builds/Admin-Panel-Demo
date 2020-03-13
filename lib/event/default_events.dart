@@ -84,7 +84,8 @@ class _DefaultEventsState extends State<DefaultEvents> {
                           iconColor: Colors.white,
                           header: Text(events[index].name),
                           expanded: GestureDetector(
-                            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEventPage(event: events[index]))),
+                            onTap: () => Navigator.push(context, 
+                                  MaterialPageRoute(builder: (context) => ViewEventPage(event: events[index]))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[

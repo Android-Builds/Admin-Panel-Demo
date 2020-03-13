@@ -5,11 +5,9 @@ class LoginWidget extends StatelessWidget {
   const LoginWidget({Key key, @required this.user, @required this.pass}) : super(key: key);
   final TextEditingController user;
   final TextEditingController pass;
+  
   @override
   Widget build(BuildContext context) {
-    // final user = new TextEditingController();
-    // final pass = new TextEditingController();
-
     return Container(
       child: SingleChildScrollView(
         child: Center(

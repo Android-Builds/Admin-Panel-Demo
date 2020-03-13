@@ -172,6 +172,20 @@ class _SubEventsState extends State<SubEvents> {
       }
       var result = await Navigator.push(context, 
             MaterialPageRoute(builder: (context) => EventDetailsPage(eventDetail: listDetails[index], edit: true)));
+      if(result == 'Delete') {
+        if(detailsList.length == 2) {
+          detailsList.insert(0, '...');
+          detailsList.removeAt(index+1);
+          listDetails.removeAt(index);
+        } else {
+          detailsList.removeAt(index);
+          listDetails.removeAt(index);
+        }
+        setState(() {
+          detailsDropDownValue = 'Add Event Details';
+        });
+        return;
+      }
       result != null ? setState(() {
         detailsDropDownValue = result.header;
         detailsList[index] = result.header;
@@ -394,7 +408,6 @@ class _SubEventsState extends State<SubEvents> {
                       }
                     },
                     child: Text('Add'),
-                    //TODO: Add error message if name is null
                   ),
                 )
               ],

@@ -6,13 +6,12 @@ class SubEventsExpandable extends StatelessWidget {
   const SubEventsExpandable({
     Key key,
     @required this.widget,
-    @required this.i,
     @required this.j,
     @required this.k
   }) : super(key: key);
 
   final ViewEventPage widget;
-  final int i, j, k;
+  final int j, k;
 
   @override
   Widget build(BuildContext context) {
