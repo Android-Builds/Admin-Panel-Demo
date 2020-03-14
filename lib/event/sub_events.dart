@@ -83,7 +83,7 @@ class _SubEventsState extends State<SubEvents> {
     }
   }
 
-  Future<void> _askedToLead(bool editUni) async {
+  Future<void> universityDialog(bool editUni) async {
     if(editUni) {
       tuniversity.text = university = universityList[index];
     }
@@ -106,7 +106,18 @@ class _SubEventsState extends State<SubEvents> {
           ),
           actions: <Widget>[
             FlatButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                if(universityList.length == 2) {
+                  universityList.insert(0, '...');
+                  universityList.removeAt(index+1);
+                } else {
+                  universityList.removeAt(index);
+                }
+                setState(() {
+                  universitiesDropDownValue = 'Add Universities';
+                });
+                Navigator.pop(context);
+              },
               child: Text('Delete'),
             ),
             FlatButton(
@@ -140,7 +151,7 @@ class _SubEventsState extends State<SubEvents> {
   universitiesDropDown(String value) async {
     if(value == 'Add Universities') {
       tuniversity.clear();
-      _askedToLead(false);
+      universityDialog(false);
     } else if(value != '...') {
       for(int i=0; i<universityList.length; i++) {
         if(value == universityList[i]) {
@@ -148,7 +159,7 @@ class _SubEventsState extends State<SubEvents> {
           break;
         }
       }
-      _askedToLead(true);
+      universityDialog(true);
     }
   }
 
@@ -395,19 +406,34 @@ class _SubEventsState extends State<SubEvents> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:40.0),
-                  child: RaisedButton(
-                    onPressed: () {
-                      if(name != null) {
-                        universityList.removeLast();
-                        var uniList = universityList;
-                        SubEvent subEvent = new SubEvent(name: name, date: date, description: description,
-                                time: time, location: location, universities: uniList, details: listDetails);
-                        Navigator.pop(context, subEvent);
-                      } else {
-                       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Missing event name !')));
-                      }
-                    },
-                    child: Text('Add'),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      RaisedButton(
+                        onPressed: () {
+                          if (widget.edit == true) {
+                            Navigator.pop(context, 'Delete');
+                          } else {
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Nothing to delete')));
+                          }
+                        },
+                        child: Text('Delete'),
+                      ),
+                      RaisedButton(
+                        onPressed: () {
+                          if(name != null) {
+                            universityList.removeLast();
+                            var uniList = universityList;
+                            SubEvent subEvent = new SubEvent(name: name, date: date, description: description,
+                                    time: time, location: location, universities: uniList, details: listDetails);
+                            Navigator.pop(context, subEvent);
+                          } else {
+                           _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Missing event name !')));
+                          }
+                        },
+                        child: Text('Add'),
+                      ),
+                    ],
                   ),
                 )
               ],

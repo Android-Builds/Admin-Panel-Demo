@@ -60,6 +60,20 @@ class _CategoriesState extends State<Categories> {
       }
       var result = await Navigator.push(context, 
             MaterialPageRoute(builder: (context) => SubEvents(subEvent: subEventList[index], edit: true)));
+      if(result == 'Delete') {
+        if(subEvents.length == 2) {
+          subEvents.insert(0, '...');
+          subEvents.removeAt(index+1);
+          subEventList.removeAt(index);
+        } else {
+          subEvents.removeAt(index);
+          subEventList.removeAt(index);
+        }
+        setState(() {
+          dropDownValue = 'Add Sub Event';
+        });
+        return;
+      }
       result != null ? dropDownValue = result.name : NullThrownError();
       setState(() {
         subEventList[index] = result;
@@ -152,20 +166,32 @@ class _CategoriesState extends State<Categories> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right:45.0, bottom: 40.0),
-                child: Align(
-                  alignment: FractionalOffset.bottomRight,
-                  child: RaisedButton(
-                    onPressed: () {
-                      if(name != null) {
-                        EventCategory eventCategory = new EventCategory(id: null, name: name, subEvents: subEventList);
-                        Navigator.pop(context, eventCategory);
-                      } else {
-                        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Add Category name !')));
-                      }
-                    },
-                    child: Text('Add'),
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal:45.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    RaisedButton(
+                      onPressed: () { 
+                        if(widget.edit == true) {
+                          Navigator.pop(context, 'Delete');
+                        } else {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Nothing to delete')));
+                        }
+                      },
+                      child: Text('Delete'),
+                    ),
+                    RaisedButton(
+                      onPressed: () {
+                        if(name != null) {
+                          EventCategory eventCategory = new EventCategory(id: null, name: name, subEvents: subEventList);
+                          Navigator.pop(context, eventCategory);
+                        } else {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Add Category name !')));
+                        }
+                      },
+                      child: Text('Add'),
+                    ),
+                  ],
                 ),
               ),
             ],

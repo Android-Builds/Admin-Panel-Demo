@@ -14,7 +14,7 @@ class DefaultEvents extends StatefulWidget {
 
 class _DefaultEventsState extends State<DefaultEvents> {
   int i, index;
-  String dropdownValue = 'Add Event';
+  String dropDownValue = 'Add Event';
   List<String> eventList = ['...', 'Add Event'];
   List<Event> events = [];
 
@@ -37,8 +37,22 @@ class _DefaultEventsState extends State<DefaultEvents> {
       }
       var result = await Navigator.push(context, MaterialPageRoute(builder: 
           (context) => Events(event: events[index], edit: true)));
+            if(result == 'Delete') {
+      if(eventList.length == 2) {
+          eventList.insert(0, '...');
+          eventList.removeAt(index+1);
+          events.removeAt(index);
+        } else {
+          eventList.removeAt(index);
+          events.removeAt(index);
+        }
+        setState(() {
+          dropDownValue = 'Add Event';
+        });
+        return;
+      }
       result != null ? setState(() {
-        dropdownValue = result.name;
+        dropDownValue = result.name;
         eventList[index] = result.name;
         events[index] = result;
       }) : NullThrownError();
@@ -115,7 +129,7 @@ class _DefaultEventsState extends State<DefaultEvents> {
               children: <Widget>[
                 Center(
                   child: DropdownButton<String>(
-                    value: dropdownValue,
+                    value: dropDownValue,
                     icon: Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
@@ -128,7 +142,7 @@ class _DefaultEventsState extends State<DefaultEvents> {
                     ),
                     onChanged: (String newValue) {
                       setState(() {
-                        dropdownValue = newValue;
+                        dropDownValue = newValue;
                       });
                       dropDown(newValue);
                     },
