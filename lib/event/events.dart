@@ -27,7 +27,8 @@ class _EventsState extends State<Events> {
 
   dropDown(String value) async {
     if(value == 'Add Event Categories') {
-      var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => Categories()));
+      var result = await Navigator.push(context, 
+          MaterialPageRoute(builder: (context) => Categories()));
       result != null ? setState((){
         if (categoryList[0] == '...'){
           categoryList.removeAt(0);
@@ -42,9 +43,10 @@ class _EventsState extends State<Events> {
           break;
         }
       }
-      var result = await Navigator.push(context, 
-            MaterialPageRoute(builder: (context) => Categories(eventCategory: listCategory[index], edit: true)));
-              if(result == 'Delete') {
+    var result = await Navigator.push(context, 
+      MaterialPageRoute(builder: (context) => 
+        Categories(eventCategory: listCategory[index], edit: true)));
+    if(result == 'Delete') {
       if(categoryList.length == 2) {
           categoryList.insert(0, '...');
           categoryList.removeAt(index+1);
@@ -72,18 +74,24 @@ class _EventsState extends State<Events> {
         context: context,
         initialDate: n == 1 ? sDate : eDate,
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != DateTime.now())
+        lastDate: DateTime(2050));
+    if (picked != null && picked != DateTime.now()) {     
       setState(() {
         if(n == 1) {
           sDate = picked;
           startDate = sDate.toLocal().toString().split(' ')[0];
         } else {
-          eDate = picked;
-          endDate = eDate.toLocal().toString().split(' ')[0];
+          print(sDate.compareTo(picked));
+          if (sDate.compareTo(picked) == -1) {
+            eDate = picked;
+            endDate = eDate.toLocal().toString().split(' ')[0];
+          } else {
+             _scaffoldKey.currentState.showSnackBar(SnackBar(content: 
+                Text('End date cannot be the same or less than start date')));
+          }
         }
       });
-      //TODO: endDate should not be less than startDate
+    }
   }
 
   @override
@@ -264,7 +272,8 @@ class _EventsState extends State<Events> {
                         if(widget.edit) {
                           Navigator.pop(context, 'Delete');
                         } else {
-                           _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Nothing to Delete !')));
+                           _scaffoldKey.currentState.showSnackBar(
+                              SnackBar(content: Text('Nothing to Delete !')));
                         }
                       },
                       child: Text('Delete'),
@@ -276,7 +285,8 @@ class _EventsState extends State<Events> {
                             endDate: endDate, theme: theme, eventCategories: listCategory);
                           Navigator.pop(context, event);
                         } else {
-                          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Add Event Name first !')));
+                          _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(content: Text('Add Event Name first !')));
                         }
                       },
                       child: Text('Add'),
