@@ -15,9 +15,8 @@ class _CategoriesState extends State<Categories> {
 
   String dropDownValue = 'Add Sub Event';
   String name;
-  int i, id, index;
+  int i, index;
   List<String> subEvents = ['...','Add Sub Event'];
-  TextEditingController tid = new TextEditingController();
   TextEditingController tname = new TextEditingController();
   var subEventList = <SubEvent>[];
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -27,14 +26,13 @@ class _CategoriesState extends State<Categories> {
     super.initState();
     if(widget.edit) {
       tname.text = name = widget.eventCategory.name;
-      id = widget.eventCategory.id;
-      tid.text = id.toString();
       if(widget.eventCategory.subEvents.isNotEmpty) {
+        subEvents = [];
         subEventList = widget.eventCategory.subEvents;
         for(i=0; i<subEventList.length; i++) {
           subEvents.add(widget.eventCategory.subEvents[i].name);
         }
-        subEvents.insert(i,'Add Sub Event');
+        subEvents.add('Add Sub Event');
         dropDownValue = subEvents[0];
       }
     }
@@ -101,24 +99,6 @@ class _CategoriesState extends State<Categories> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal:40.0),
-                child: Container(
-                  child: TextField(
-                    controller: tid,
-                    maxLines: 1,
-                    onChanged: (value) {
-                      id = int.parse(tid.text);
-                    },
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Category ID",
-                      fillColor: Colors.grey[900],
-                      filled: true,
-                    ),
-                  ),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
                 child: Container(

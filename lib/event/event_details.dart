@@ -12,8 +12,7 @@ class EventDetailsPage extends StatefulWidget {
 class _EventDetailsPageState extends State<EventDetailsPage> {
 
   String dropdownValue = 'One';
-  String id, header, desc;
-  TextEditingController tid = new TextEditingController();
+  String header, desc;
   TextEditingController theader = new TextEditingController();
   TextEditingController tdesc = new TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -22,7 +21,6 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
   void initState(){
     super.initState();
     if(widget.edit) {
-      tid.text = id = widget.eventDetail.id;
       theader.text = header = widget.eventDetail.header;
       tdesc.text = desc = widget.eventDetail.desc;
     }
@@ -40,25 +38,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
           padding: const EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal:40.0),
-                child: Container(
-                  child: TextField(
-                    controller: tid,
-                    onChanged: (value) {
-                      id = tid.text;
-                    },
-                    maxLines: 1,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "ID",
-                      fillColor: Colors.grey[900],
-                      filled: true,
-                    ),
-                  ),
-                ),
-              ),              
+            children: <Widget>[             
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
                 child: Container(
@@ -114,7 +94,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                     RaisedButton(
                       onPressed: () {
                         if(header != null) {
-                          EventDetail eventDetail = new EventDetail(id: id, header: header, desc: desc);
+                          EventDetail eventDetail = new EventDetail(header: header, desc: desc);
                           Navigator.pop(context, eventDetail);
                         } else {
                           _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Add Header first !')));

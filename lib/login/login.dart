@@ -35,7 +35,6 @@ class _LoginPageState extends State<LoginPage> {
   _setRememberMe(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('rememberMe', value);
-    prefs.commit();
   }
 
   @override

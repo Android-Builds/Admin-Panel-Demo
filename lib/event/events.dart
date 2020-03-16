@@ -14,13 +14,12 @@ class Events extends StatefulWidget {
 class _EventsState extends State<Events> {
   
   int i, index;
-  String id, name, theme, startDate, endDate;
+  String name, theme, startDate, endDate;
   DateTime sDate = DateTime.now();
   DateTime eDate = DateTime.now();
   String dropDownValue = 'Add Event Categories';
   List<String> categoryList = ['...', 'Add Event Categories'];
   List<EventCategory> listCategory = [];
-  TextEditingController tid = new TextEditingController();
   TextEditingController tname = new TextEditingController();
   TextEditingController ttheme = new TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -102,7 +101,6 @@ class _EventsState extends State<Events> {
     if(widget.edit) {
       startDate = widget.event.startDate;
       endDate = widget.event.endDate;
-      tid.text = id = widget.event.id;
       tname.text = name = widget.event.name;
       ttheme.text = theme = widget.event.theme;
       startDate = widget.event.startDate;
@@ -134,22 +132,6 @@ class _EventsState extends State<Events> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal:40.0),
-                child: TextField(
-                  controller: tid,
-                  onChanged: (value) {
-                    id = tid.text;
-                  },
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    fillColor: Colors.grey[900],
-                    filled: true,
-                    hintText: "Event ID",
-                    border: InputBorder.none
-                  ),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
                 child: TextField(

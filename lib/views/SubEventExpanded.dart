@@ -24,10 +24,14 @@ class SubEventsExpandable extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            widget.event.eventCategories[j].subEvents[k].time != null ? Text('Date: ' + widget.event.eventCategories[j].subEvents[k].date) : Container(),
-            widget.event.eventCategories[j].subEvents[k].time != null ? Text('Time:' + widget.event.eventCategories[j].subEvents[k].time) :  Container(),
-            widget.event.eventCategories[j].subEvents[k].location != null ? Text('Location: ' +widget.event.eventCategories[j].subEvents[k].location) :  Container(),
-            widget.event.eventCategories[j].subEvents[k].description != null ? Text('Description: ' + widget.event.eventCategories[j].subEvents[k].description) :  Container(),
+            widget.event.eventCategories[j].subEvents[k].time != null ? 
+              Text('Date: ' + widget.event.eventCategories[j].subEvents[k].date) : Container(),
+            widget.event.eventCategories[j].subEvents[k].time != null ? 
+              Text('Time:' + widget.event.eventCategories[j].subEvents[k].time) :  Container(),
+            widget.event.eventCategories[j].subEvents[k].location != null ? 
+              Text('Location: ' +widget.event.eventCategories[j].subEvents[k].location) :  Container(),
+            widget.event.eventCategories[j].subEvents[k].description != null ? 
+              Text('Description: ' + widget.event.eventCategories[j].subEvents[k].description) :  Container(),
             ListView.builder(
               shrinkWrap: true,
               itemCount: widget.event.eventCategories[j].subEvents[k].details.length,
@@ -35,10 +39,12 @@ class SubEventsExpandable extends StatelessWidget {
                 return ExpandablePanel(
                   controller: new ExpandableController(),
                   iconColor: Colors.white,
-                  header: Text(widget.event.eventCategories[j].subEvents[k].details[l].header + ':'),
+                  header: widget.event.eventCategories[j].subEvents[k].details[l].header != null ? 
+                    Text(widget.event.eventCategories[j].subEvents[k].details[l].header + ':') : Container(),
                   expanded: Padding(
                     padding: EdgeInsets.all(10.0),
-                    child: Text(widget.event.eventCategories[j].subEvents[k].details[l].desc),
+                    child: widget.event.eventCategories[j].subEvents[k].details[l].desc != null ? 
+                      Text(widget.event.eventCategories[j].subEvents[k].details[l].desc) : Container(),
                   ),
                 );
               }
@@ -49,3 +55,5 @@ class SubEventsExpandable extends StatelessWidget {
     );
   }
 }
+
+//TODO: null problem with view 
