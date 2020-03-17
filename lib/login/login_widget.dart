@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import '../constatnts.dart';
 
-class LoginWidget extends StatelessWidget {
+bool passwordVisible = true;
+
+class LoginWidget extends StatefulWidget {
   const LoginWidget({Key key, @required this.user, @required this.pass}) : super(key: key);
   final TextEditingController user;
   final TextEditingController pass;
   
+  @override
+  _LoginWidgetState createState() => _LoginWidgetState();
+}
+
+class _LoginWidgetState extends State<LoginWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,36 +32,53 @@ class LoginWidget extends StatelessWidget {
               SizedBox(height: 50.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
-                child: TextField(
-                  controller: user,
-                  onChanged: (text) {
-                    userid = user.text;
-                  },
+                child: TextFormField(
                   maxLines: 1,
-                  obscureText: false,
+                  keyboardType: TextInputType.text,
+                  controller: widget.user,
+                  onChanged: (text) {
+                    userid = widget.user.text;
+                  },
+                  obscureText: passwordVisible,
                   decoration: InputDecoration(
-                    hintText: "User ID",
-                    border: InputBorder.none,
+                    labelText: 'Username',
+                    hintText: 'Enter your Username',
                     fillColor: Colors.grey[900],
-                    filled: true
+                    filled: true,
+                    border: InputBorder.none,
                   ),
                 ),
               ),
               SizedBox(height: 40.0,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal:40.0),
-                child: TextField(
-                  controller: pass,
-                  onChanged: (text) {
-                    password = pass.text;
-                  },
+                child: TextFormField(
                   maxLines: 1,
-                  obscureText: true,
+                  keyboardType: TextInputType.text,
+                  controller: widget.pass,
+                  onChanged: (text) {
+                    password = widget.pass.text;
+                  },
+                  obscureText: passwordVisible,
                   decoration: InputDecoration(
-                    hintText: "Password",
-                    border: InputBorder.none,
+                    labelText: 'Password',
+                    hintText: 'Enter your password',
                     fillColor: Colors.grey[900],
-                    filled: true
+                    filled: true,
+                    border: InputBorder.none,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        passwordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          passwordVisible = !passwordVisible;
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),

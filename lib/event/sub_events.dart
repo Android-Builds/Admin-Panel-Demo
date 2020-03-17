@@ -182,7 +182,8 @@ class _SubEventsState extends State<SubEvents> {
         }
       }
       var result = await Navigator.push(context, 
-            MaterialPageRoute(builder: (context) => EventDetailsPage(eventDetail: listDetails[index], edit: true)));
+        MaterialPageRoute(builder: (context) => 
+          EventDetailsPage(eventDetail: listDetails[index], edit: true)));
       if(result == 'Delete') {
         if(detailsList.length == 2) {
           detailsList.insert(0, '...');
@@ -414,7 +415,9 @@ class _SubEventsState extends State<SubEvents> {
                           if (widget.edit == true) {
                             Navigator.pop(context, 'Delete');
                           } else {
-                            _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Nothing to delete')));
+                            _scaffoldKey.currentState.showSnackBar(
+                              SnackBar(content: Text('Nothing to delete'))
+                            );
                           }
                         },
                         child: Text('Delete'),
@@ -424,11 +427,15 @@ class _SubEventsState extends State<SubEvents> {
                           if(name != null) {
                             universityList.removeLast();
                             var uniList = universityList;
-                            SubEvent subEvent = new SubEvent(name: name, date: date, description: description,
-                                    time: time, location: location, universities: uniList, details: listDetails);
+                            SubEvent subEvent = new SubEvent(
+                              name: name, date: date, description: description, time: time, 
+                              location: location, universities: uniList, details: listDetails
+                            );
                             Navigator.pop(context, subEvent);
                           } else {
-                           _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Missing event name !')));
+                           _scaffoldKey.currentState.showSnackBar(
+                              SnackBar(content: Text('Missing event name !'))
+                            );
                           }
                         },
                         child: Text('Add'),
